@@ -53,7 +53,7 @@ export default {
         return;
       } else if (rules.test(this.input_url)) {
         let param = { old_url: this.input_url };
-        this.$http.post("http://localhost:8000/shortUrl", param).then((res) => {
+        this.$http.post("http://localhost:8000/api/shortUrl", param).then((res) => {
           this.new_url = res.data.new_url;
           console.log(this.new_url);
         });

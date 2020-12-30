@@ -1,0 +1,53 @@
+version: "3.7"
+
+services:
+  fastapi:
+    build: ./backend
+    container_name: fastapi
+    hostname: fastapi
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: "postgresql://amos:ppoozine@postgres:5432/shorturl"
+      REDIS_URL: "redis"
+    depends_on:
+      - postgres
+      - redis
+  
+  postgres:
+    image: postgres
+    container_name: postgres
+    hostname: postgres
+    environment:
+      POSTGRES_DB: "shorturl"
+      POSTGRES_USER: "amos"
+      POSTGRES_PASSWORD: "ppoozine"
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/postgres/initdb.d:/docker-entrypoint-inited.d
+      - ./data/postgres/pgdata:/var/lib/postgresql/data
+      - ./data/postgres/postgres.conf:/etc/postgresql/postgresql.conf
+    restart: always
+  
+  redis:
+    image: redis:alpine
+    container_name: redis
+    hostname: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis-data:/data
+    restart: always
+  
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - fastapi
+
+    

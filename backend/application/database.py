@@ -11,5 +11,6 @@ engine = sqlalchemy.create_engine(DATABASE_URL)
 metadata.create_all(engine)
 
 # Redis
-pool = redis.ConnectionPool(host="localhost", port=6379)
+REDIS_URL = os.getenv("REDIS_URL")
+pool = redis.ConnectionPool(host=REDIS_URL, port=6379)
 redis_db = redis.Redis(connection_pool=pool)

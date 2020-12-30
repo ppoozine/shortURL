@@ -8,6 +8,7 @@ def create_app():
     app = FastAPI(
         title="Short URL using FastAPI PostgreSQL Async EndPoints",
         docs_url="/api/docs",
+        openapi_url="/api/openapi.json",
         version="0.1.0",
         description="This is the API docs that provides Short URL project."
     )

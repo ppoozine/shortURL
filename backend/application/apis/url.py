@@ -7,8 +7,15 @@ from typing import List
 from ..log.log import logger
 from ..database import database
 from ..core.core import short_url
+import os
 
 router = APIRouter()
+
+mode = os.getenv("MODE")
+if mode == "Development":
+    HOST = "http://localhost:8000/api/"
+else:
+    HOST = "http://localhost/api/"
 
 @router.post("/shortUrl", response_model=ResponsesUrl, status_code=status.HTTP_201_CREATED)
 @logger.catch
@@ -20,7 +27,7 @@ async def create_short_url(create: RequestUrl):
         return {"new_url": a["new_url"]}
     else:
         old_url = create.old_url.split("://")[-1]
-        new_url = "http://localhost:8000/" + short_url(old_url)
+        new_url = HOST + short_url(old_url)
         query = UrlModel.insert().values(
             old_url=create.old_url,
             new_url=new_url
@@ -31,7 +38,7 @@ async def create_short_url(create: RequestUrl):
 @router.get("/{new_url}", status_code=status.HTTP_200_OK)
 @logger.catch
 async def read_url(new_url: str):
-    url = "http://localhost:8000/" + new_url
+    url = HOST + new_url
     query = UrlModel.select().where(UrlModel.c.new_url == url)
     a = await database.fetch_one(query)
     # return {"old_url": a["old_url"]}

@@ -1,4 +1,5 @@
 module.exports = {
+  publicPath: "/shorturl",
   lintOnSave: false,
   runtimeCompiler: true,
   configureWebpack: {
